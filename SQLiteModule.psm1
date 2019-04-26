@@ -13,21 +13,26 @@ function Invoke-SQLiteQuery {
       Your SQLite Quer -Query
 
       .EXAMPLE
+      Invoke-SQLiteQuery -Database ":memory:" -Query "SELECT 35 + 7;"
+      Using an In-Memory database
+      
+      .EXAMPLE
+      Invoke-SQLiteQuery -Database "C:\Users\Public\Downloads\Chinook_Sqlite.sqlite" -Query "SELECT AlbumId, Title, ArtistId FROM Album ORDER BY title LIMIT 10;" | ForEach-Object { $_ -join ','} | Out-File .\myfile.csv
+      Save result of a query to a CSV file
+
+      .EXAMPLE
+      Invoke-SQLiteQuery -Database "C:\Users\Public\Downloads\Chinook_Sqlite.sqlite" -Query "SELECT sql FROM sqlite_master WHERE type = 'table'"
+      Show all columns in a SQLite table
+
+      .EXAMPLE
       Invoke-SQLiteQuery -Database "$HOME/SampleDB.sqlite" -Query (Get-Content "$HOME/SampleDB.sql" | Out-String)
       Invoke a SQLite query from a SQL file
 
       .NOTES
-      Module for my PSConfEU 2019 talk
+      Module for my PSConfEU 2019 talk about PowerShell and SQLite
 
       .LINK
-      URLs to related sites
-      The first link is opened by Get-Help -Online Invoke-SQLiteQuery
-
-      .INPUTS
-      List of input types that are accepted by this function.
-
-      .OUTPUTS
-      List of output types produced by this function.
+      https://github.com/datenteiler/SQLiteModule
   #>
 
   param
@@ -87,16 +92,23 @@ function Invoke-SQLiteQuery {
         $sql = $con.CreateCommand()
         $sql.CommandText = $Query
         $reader = $sql.ExecuteReader()
-        
-        [System.Collections.ArrayList]$values = @()
+                
         while ($reader.Read())
         {
-          for ([int]$i = 0; $i -lt $reader.Read(); $i++) 
+          
+          $values = @()
+          for ([int]$i = 0; $i -lt $reader.FieldCount; $i++) 
           {
-            $values.Add($reader.GetValue($i))
+            $values += $reader.GetValue($i)           
           }
-          $values
-        }
+          $output = @()
+          $output += , $values  # append an array to an array
+                                # the comma operator makes an array 
+                                # with a single item and avoids unrolling
+          $output
+        } 
+        $reader.Close()
+        
     }
     #endregion
 
