@@ -106,14 +106,13 @@ function Invoke-SQLiteQuery {
                                 # the comma operator makes an array 
                                 # with a single item and avoids unrolling
           $output
-        } 
-        $reader.Close()
-        
+        }      
     }
     #endregion
 
     #region END
     end {
+        $reader.Close()
         $sql.Dispose()
         $con.Close()
     }
