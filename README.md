@@ -13,7 +13,7 @@ Installation from PowerShell Gallery (PSGallery)
 
 You can download the module from PSGallery in PowerShell with this command:
 
-```Install-Module -Name InvokeSQLiteQuery```
+```Install-Module -Name SQLiteModule```
 
 How to use Invoke-SQLiteQuery
 -----------------------------
