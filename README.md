@@ -49,3 +49,9 @@ Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT AlbumId, Tit
 Invoke-SQLiteQuery -Database ":memory:" -Query "SELECT 35 + 7;"
 ```
 
+### SQLite uses a dynamic type system and provides five basic datatypes called storage classes
+
+```
+Invoke-SQLiteQuery -Database ":MEMORY:" -Query "SELECT typeof(42),typeof(1.5),typeof('Hello, World'),typeof(x'BAADA555'),typeof(NULL);"
+```
+
