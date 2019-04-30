@@ -62,7 +62,7 @@ We cannot access the same in-memory database from different processes. A new con
 Within one process it is possible to share an in-memory database with the use of an URI:
 
 ```
-Invoke-SQLiteQuery -Database ":memory:?cache=shared" -Query "CREATE TABLE contacts (                              
+Invoke-SQLiteQuery -Database "file::memory:?cache=shared" -Query "CREATE TABLE contacts (                              
  contact_id INTEGER PRIMARY KEY,               
  first_name TEXT NOT NULL,
  last_name TEXT NOT NULL,
@@ -70,7 +70,7 @@ Invoke-SQLiteQuery -Database ":memory:?cache=shared" -Query "CREATE TABLE contac
  phone TEXT NOT NULL UNIQUE
  );"
 
-Invoke-SQLiteQuery -Database ":memory:?cache=shared" -Query "INSERT INTO contacts (first_name,last_name,email,phone) VALUES('Johnny','Cash','j@cash.com',555346);"
+Invoke-SQLiteQuery -Database "file::memory:?cache=shared" -Query "INSERT INTO contacts (first_name,last_name,email,phone) VALUES('Johnny','Cash','j@cash.com',555346);"
 
-Invoke-SQLiteQuery -Database ":memory:?cache=shared" -Query "SELECT * FROM contacts;"
+Invoke-SQLiteQuery -Database "file::memory:?cache=shared" -Query "SELECT * FROM contacts;"
 ```
