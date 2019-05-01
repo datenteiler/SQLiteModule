@@ -43,6 +43,11 @@ Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT Name, Title 
 Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT Name, Title FROM Album JOIN Artist on Album.ArtistId = Artist.ArtistId ORDER BY title LIMIT 10;" | ForEach-Object { $_ -join ";" } | ConvertFrom-Csv -Header 'Artist','Album' -Delimiter ';' | Export-Csv -Path ./myfile.csv
 ```
 
+### Find the track with longest duration and the album
+```
+Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT Album.Title, Name, Milliseconds FROM Track JOIN Album ON Track.AlbumId = Album.AlbumID WHERE Milliseconds = (SELECT MAX(Milliseconds) FROM Track);" | ForEach-Object { $_ -join ';'} | ConvertFrom-Csv -Header 'Album','Title','Duration' -Delimiter ';' | Format-List
+```
+
 ### Using an In-Memory database
 
 ```
