@@ -31,16 +31,16 @@ Invoke-SQLiteQuery -Database "C:\Users\Public\Downloads\Chinook_Sqlite.sqlite" -
 ``` 
 Invoke-SQLiteQuery -Database "C:\Users\Public\Downloads\Chinook_Sqlite.sqlite" -Query "SELECT AlbumId, Title, ArtistId FROM Album ORDER BY title LIMIT 10;"
 ```
-### Format the output of the query
 
+### Join tables Album and Artist and Format the output of the query
 ```
-Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT AlbumId, Title, ArtistId FROM Album ORDER BY title LIMIT 10;" | ForEach-Object  { $_ -join ';' } | ConvertFrom-Csv -Header 'AlbumID','Title','ArtistID' -Delimiter ';'
+Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT Name, Title FROM Album JOIN Artist on Album.ArtistId = Artist.ArtistId ORDER BY title LIMIT 10;" | ForEach-Object { $_ -join ";" } | ConvertFrom-Csv -Header 'Artist','Album' -Delimiter ';'
 ```
 
 ### Save result of a query to a CSV file
 
 ```
-Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT AlbumId, Title, ArtistId FROM Album ORDER BY title LIMIT 10;" | ForEach-Object  { $_ -join ';' } | ConvertFrom-Csv -Header 'AlbumID','Title','ArtistID' -Delimiter ';' | Export-Csv -Path ./myfile.csv
+Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT Name, Title FROM Album JOIN Artist on Album.ArtistId = Artist.ArtistId ORDER BY title LIMIT 10;" | ForEach-Object { $_ -join ";" } | ConvertFrom-Csv -Header 'Artist','Album' -Delimiter ';' | Export-Csv -Path ./myfile.csv
 ```
 
 ### Using an In-Memory database
