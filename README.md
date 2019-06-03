@@ -60,6 +60,7 @@ Invoke-SQLiteQuery -Database ":memory:" -Query "SELECT 35 + 7;"
 Invoke-SQLiteQuery -Database ":MEMORY:" -Query "SELECT typeof(42),typeof(1.5),typeof('Hello, World'),typeof(x'BAADA555'),typeof(NULL);"
 ```
 
+<!--
 ### Access the same SQLite in-memory (:memory:) database with two or more steps
 
 We cannot access the same in-memory database from different processes. A new connection to :memory: always creates a new database, because every :memory: database is distinct from every other. This is different from an on-disk database, where multiple connections with the same connection string creates a connection to one database.
@@ -79,3 +80,4 @@ Invoke-SQLiteQuery -Database "file::memory:?cache=shared" -Query "INSERT INTO co
 
 Invoke-SQLiteQuery -Database "file::memory:?cache=shared" -Query "SELECT * FROM contacts;"
 ```
+-->
