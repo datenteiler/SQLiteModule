@@ -2,8 +2,8 @@
 With "Invoke-SQLiteQuery" you can invoke a SQLite query to your SQLite database in PowerShell
 
 
-PowerShell binary cmdlet Invoke-SQLiteQuery
-------------------------------------------------------------
+PowerShell Cmdlet Invoke-SQLiteQuery
+------------------------------------
 
 * Invoke-SQLiteQuery -Database /path/to/sqlite.db -Query "SELECT name FROM sqlite_master WHERE type='table';"
 
