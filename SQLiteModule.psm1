@@ -33,6 +33,7 @@ function Invoke-SQLiteQuery {
 
       .LINK
       https://github.com/datenteiler/SQLiteModule
+
   #>
 
   param
@@ -52,7 +53,13 @@ function Invoke-SQLiteQuery {
         Mandatory, 
         ValueFromPipeline, 
         HelpMessage='Your SQL query')]
-    $Query
+    $Query,
+    
+    [hashtable]
+    [Parameter(
+        ValueFromPipeline
+    )]
+    $SqlParameters 
   )
   
     #region BEGIN
@@ -62,10 +69,21 @@ function Invoke-SQLiteQuery {
         if (!(Test-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll')))
         {
           if ($IsLinux) {
-            $SQLiteInteropdllLin = Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll_lin'
-            $SQLiteInteropdll =  Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll'
+            if ($(uname -m) -like 'x86_64')
+            {
+              $SQLiteInteropdllLin = Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll_lin'
+              $SQLiteInteropdll =  Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll'
 
-            Copy-Item -Path $SQLiteInteropdllLin -Destination $SQLiteInteropdll -Force
+              Copy-Item -Path $SQLiteInteropdllLin -Destination $SQLiteInteropdll -Force
+            }
+            else
+            {
+              $SQLiteInteropdllLin = Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll_arm'
+              $SQLiteInteropdll =  Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll'
+
+              Copy-Item -Path $SQLiteInteropdllLin -Destination $SQLiteInteropdll -Force
+            }
+            
           }
           elseif ($IsMacOS) {
             $SQLiteInteropdllOsx = Join-Path -Path $PSScriptRoot -ChildPath 'SQLite.Interop.dll_osx'
@@ -91,6 +109,23 @@ function Invoke-SQLiteQuery {
         $con.Open()
         $sql = $con.CreateCommand()
         $sql.CommandText = $Query
+        
+        if ($SqlParameters -ne $null)
+        {
+          $SqlParameters.GetEnumerator() |
+          ForEach-Object {
+            if ($_.Value -ne $null)
+            {
+              if($_.Value -is [datetime]) { $_.Value = $_.Value.ToString("yyyy-MM-dd HH:mm:ss") }
+                $sql.Parameters.AddWithValue("@$($_.Key)", $_.Value)
+            }
+            else
+            {
+              $sql.Parameters.AddWithValue("@$($_.Key)", [DBNull]::Value)        
+            }            
+          }
+        }
+               
         $reader = $sql.ExecuteReader()
                 
         while ($reader.Read())
