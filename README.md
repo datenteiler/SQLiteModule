@@ -78,3 +78,43 @@ $c = New-ExcelChart -Title Genres `
 
 $data | Export-Excel temp.xlsx -AutoSize -TableName Impressions -Show -ExcelChartDefinition $c
 ```
+
+### Examples by RamblingCookieMonster
+### https://ramblingcookiemonster.github.io/SQLite-and-PowerShell/
+
+### Let's create a data source and a table:
+
+```
+$Database = "C:\Users\Public\Names.sqlite"
+$Query = "DROP TABLE NAMES; CREATE TABLE NAMES (
+        Fullname VARCHAR(20) PRIMARY KEY,
+        Surname TEXT,
+        Givenname TEXT,
+        Birthdate DATETIME)"
+
+Invoke-SqliteQuery -Database $Database -Query $Query 
+```
+
+### That was pretty easy! We used a SQLite PRAGMA statement to see basic details on the table I created.
+
+```
+"`nDatabase Integrity: Database is $(Invoke-SQLiteQuery $Database -Query 'PRAGMA INTEGRITY_CHECK')"
+
+$sql = Invoke-SQLiteQuery $Database -Query "SELECT sql FROM sqlite_master WHERE type = 'table'"
+```
+
+### Now let's insert some data and pull it back out:
+
+```
+$query = "INSERT INTO NAMES (Fullname, Surname, Givenname, Birthdate) VALUES (@full, 'Cookie', 'Monster', @BD)"                  
+Invoke-SqliteQuery -Database $Database -Query $query -SqlParameters @{
+        full = "Cookie Monster"
+        BD   = (Get-Date("2006-12-12"))
+    } 
+```
+
+### Check to see if we inserted the data:
+
+```
+Invoke-SqliteQuery -Da $Database -Q "SELECT * FROM NAMES" | ForEach-Object { $_ -join ";" } | ConvertFrom-Csv -Header 'Fullname', 'Surname', 'Givenname', 'Birthdate' -Delimiter ";" 
+```
