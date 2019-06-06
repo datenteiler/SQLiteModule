@@ -79,7 +79,7 @@ $c = New-ExcelChart -Title Genres `
 $data | Export-Excel temp.xlsx -AutoSize -TableName Impressions -Show -ExcelChartDefinition $c
 ```
 
-### Examples by RamblingCookieMonster
+### This example is from RamblingCookieMonster because PSSQLite gives me the idea to implement SqlParameters.
 ### https://ramblingcookiemonster.github.io/SQLite-and-PowerShell/
 
 ### Let's create a data source and a table:
