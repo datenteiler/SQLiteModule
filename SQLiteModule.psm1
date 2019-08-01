@@ -122,10 +122,13 @@ function Invoke-SQLiteQuery {
             else
             {
               $sql.Parameters.AddWithValue("@$($_.Key)", [DBNull]::Value)        
-            }            
+            }
+            
+            
           }
         }
-               
+        
+        
         $reader = $sql.ExecuteReader()
                 
         while ($reader.Read())
