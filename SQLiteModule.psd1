@@ -1,6 +1,6 @@
 @{
 RootModule = 'SQLiteModule.psm1'
-ModuleVersion = '1.0'
+ModuleVersion = '1.0.3'
 GUID = 'da5db269-5768-4b17-8963-e898fd7ac9c5'
 Author = 'Christian Imhorst (datenteiler)'
 CompanyName = 'datenteiler.de'
