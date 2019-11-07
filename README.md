@@ -32,6 +32,12 @@ Invoke-SQLiteQuery -Database "C:\Users\Public\Downloads\Chinook_Sqlite.sqlite" -
 Invoke-SQLiteQuery -Database "C:\Users\Public\Downloads\Chinook_Sqlite.sqlite" -Query "SELECT AlbumId, Title, ArtistId FROM Album ORDER BY title LIMIT 10;"
 ```
 
+### Double the leading two backslashes in the file name of the database if you have to deal with an UNC path
+
+```
+Invoke-SQLiteQuery -Database \\\\10.09.08.07\db\Chinook_Sqlite.sqlite -Query "SELECT COUNT(*) FROM Album;"
+```
+
 ### Join tables Album and Artist and Format the output of the query
 ```
 Invoke-SQLiteQuery -Database ./Chinook_Sqlite.sqlite -Query "SELECT Name, Title FROM Album JOIN Artist on Album.ArtistId = Artist.ArtistId ORDER BY title LIMIT 10;" | ForEach-Object { $_ -join ";" } | ConvertFrom-Csv -Header 'Artist','Album' -Delimiter ';'
